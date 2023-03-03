@@ -1,0 +1,44 @@
+public class CustomAttachmentSection_Ctrl {
+    @AuraEnabled
+    public static myWrapper getFiles(string recordId){
+        myWrapper myWrp = new myWrapper();
+        List<ContentDocument> DocumentList = new List<ContentDocument>();
+        Set<Id> documentIds = new Set<Id>();
+        List<ContentDocumentLink> cdl=[select id,LinkedEntityId,ContentDocumentId from ContentDocumentLink where LinkedEntityId=:recordId];
+        for(ContentDocumentLink cdLink:cdl){
+            documentIds.add(cdLink.ContentDocumentId);
+        }
+        DocumentList = [select Id,Title,FileType,ContentSize,Description,CreatedBy.Name,CreatedBy.Id,LastModifiedDate from ContentDocument where id IN: documentIds];
+        myWrp.cdList = DocumentList;
+        myWrp.cdCount = DocumentList.size();
+        return myWrp;
+    }
+    
+    @AuraEnabled
+    public static myWrapper UpdateFiles(string documentId,string title,string recordId){
+        myWrapper myWrp = new myWrapper();
+        ContentDocument cd = [select id,title from ContentDocument where Id=:documentId];
+        cd.Title = title;
+        try{
+            update cd;
+        }
+        catch(DMLException e){
+            system.debug('Exception has occurred! ' +e.getMessage());  
+        }
+        List<ContentDocument> DocumentList = new List<ContentDocument>();
+        Set<Id> documentIds = new Set<Id>();
+        List<ContentDocumentLink> cdl=[select id,LinkedEntityId,ContentDocumentId from ContentDocumentLink where LinkedEntityId=:recordId];
+        for(ContentDocumentLink cdLink:cdl){
+            documentIds.add(cdLink.ContentDocumentId);
+        }
+        DocumentList = [select Id,Title,FileType,ContentSize,Description,CreatedBy.Name,CreatedBy.Id,LastModifiedDate from ContentDocument where id IN: documentIds];
+        myWrp.cdList = DocumentList;
+        myWrp.cdCount = DocumentList.size();
+        return myWrp;  // Return list of files on parent record
+    }
+        
+    public class myWrapper {
+        @AuraEnabled Public List<ContentDocument> cdList{get;set;}
+        @AuraEnabled public Integer cdCount {get;set;}
+    }
+}
