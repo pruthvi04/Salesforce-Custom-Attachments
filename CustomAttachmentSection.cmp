@@ -1,0 +1,38 @@
+<aura:component controller="CustomAttachmentSection_Ctrl" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>  
+    <aura:attribute name="files" type="ContentDocument[]"/>
+    <aura:attribute name="testColumns" type="List"/>
+    <aura:attribute name="recordId" type="string"/>  
+    <aura:attribute name="accept" type="List" default="['.jpg','.jpeg','.pdf','.csv','.xlsx','.txt','.docx','.ppt','.pptx','.xls','.gif','.png','.js']"/>  
+    <aura:attribute name="multiple" type="Boolean" default="true"/>  
+    <aura:attribute name="disabled" type="Boolean" default="false"/>
+    <aura:attribute name="recordsCount" type="Integer"/>
+    <div class="slds">  
+        <div style="border-left: 1px solid rgb(221, 219, 218);  
+                    border-right: 1px solid rgb(221, 219, 218);  
+                    border-bottom: 1px solid rgb(221, 219, 218);  
+                    border-top: 1px solid rgb(221, 219, 218);">  
+            <div class="slds-page-header" style="border-radius: 0px; border-right: 0px;border-left: 0px;border-top: 0px;  
+                                                 box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0.1);">  
+                <lightning:icon iconName="action:add_file" size="x-small" alternativeText="Approved"/>&nbsp;&nbsp;<b>Notes &amp; Attachments &nbsp;({!v.recordsCount})</b>
+            </div>
+            <div class="slds-grid">  
+                    <div class="slds-col slds-size_2-of-12">
+                        <lightning:input type="text" name="input1" label="Enter File Name" aura:id="fileName" />
+                    </div>&nbsp; &nbsp;
+                    <div class="slds-col slds-size_8-of-12"/>
+                    <div class="slds-col slds-size_2-of-12">
+                        <lightning:fileUpload label="" multiple="{!v.multiple}"
+                                              accept="{!v.accept}" recordId="{!v.recordId}"
+                                              onuploadfinished="{!c.UploadFinished}" />
+                    </div>
+                </div><br/>
+                <lightning:datatable
+                                     keyField="id"
+                                     data="{!v.files}"
+                                     columns="{!v.testColumns }"
+                                     hideCheckboxColumn="true"
+                                     onrowaction="{!c.OpenFile}"/>
+            </div>  
+    </div>  
+</aura:component>
