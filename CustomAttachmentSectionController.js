@@ -39,8 +39,8 @@
         var action = event.getParam('action');
         var row = event.getParam('row');
         var rec_id = row.Id;
-        $A.get('e.lightning:openFiles').fire({ //Lightning Openfiles event  
-            recordIds: [rec_id] //file id  
+        $A.get('e.lightning:openFiles').fire({ 
+            recordIds: [rec_id] 
         });  
     }, 
     
